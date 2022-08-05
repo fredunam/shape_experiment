@@ -190,17 +190,17 @@ extern uint8_t kilo_straight_right;
  *  }
  * @endcode
  *
- * @note You must register a message callback before calling kilo_start.
+ * @note Vous devez enregistrer un rappel de message avant d'appeler kilo_start.
  * @see message_t, message_crc, kilo_message_tx, kilo_message_tx_success
  */
 extern message_rx_t kilo_message_rx;
 /**
  * @brief Callback for message transmission.
  *
- * This callback is triggered every time a message is scheduled for
- * transmission (roughly twice every second). This callback returns a
- * pointer to the message that should be sent; if the pointer is null,
- * the no message is sent.
+ * Ce rappel est déclenché chaque fois qu'un message est programmé pour
+ * être transmis (environ deux fois par seconde). Ce rappel renvoie un
+ * pointeur vers le message qui doit être envoyé ; si le pointeur est nul,
+ * aucun message n'est envoyé.
  *
  * @code
  *

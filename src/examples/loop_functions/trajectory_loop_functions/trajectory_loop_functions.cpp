@@ -4,24 +4,23 @@
 /****************************************/
 
 /*
- * To reduce the number of waypoints stored in memory,
- * consider two robot positions distinct if they are
- * at least MIN_DISTANCE away from each other
- * This constant is expressed in meters
+ * Pour réduire le nombre de points de passage stockés en mémoire, considérez que
+ * deux positions du robot sont distinctes si elles sont distantes d'au moins MIN_DISTANCE.
+ * Cette constante est exprimée en mètres
  */
-static const Real MIN_DISTANCE = 0.05f;
-/* Convenience constant to avoid calculating the square root in PostStep() */
-static const Real MIN_DISTANCE_SQUARED = MIN_DISTANCE * MIN_DISTANCE;
+static const Real MIN_DISTANCE = 0.05f;  //5cm
+/* Constante de commodité pour éviter de calculer la racine carrée dans PostStep() */
+static const Real MIN_DISTANCE_SQUARED = MIN_DISTANCE * MIN_DISTANCE; //0,25cm
 
 /****************************************/
 /****************************************/
 
 void CTrajectoryLoopFunctions::Init(TConfigurationNode& t_tree) {
    /*
-    * Go through all the robots in the environment
-    * and create an entry in the waypoint map for each of them
+    * Passez en revue tous les robots de l'environnement et créez une entrée
+    * dans la carte des points de passage pour chacun d'entre eux.
     */
-   /* Get the map of all kilobots from the space */
+   /* Obtenez la carte de tous les kilobots de l'espace */
    CSpace::TMapPerType& tKBMap = GetSpace().GetEntitiesByType("kilobot");
    /* Go through them */
    for(CSpace::TMapPerType::iterator it = tKBMap.begin();
@@ -55,6 +54,7 @@ void CTrajectoryLoopFunctions::Reset() {
       m_tWaypoints[pcFB].clear();
       /* Add the initial position of the kilobot */
       m_tWaypoints[pcFB].push_back(pcFB->GetEmbodiedEntity().GetOriginAnchor().Position);
+
    }
 }
 
@@ -70,7 +70,10 @@ void CTrajectoryLoopFunctions::PostStep() {
        ++it) {
       /* Create a pointer to the current kilobot */
       CKilobotEntity* pcKB = any_cast<CKilobotEntity*>(it->second);
-      /* Add the current position of the kilobot if it's sufficiently far from the last */
+      /*
+       * Ajouter la position actuelle du kilobot si elle est suffisamment éloignée de
+       * la dernière position du kilobot.
+      */
       if(SquareDistance(pcKB->GetEmbodiedEntity().GetOriginAnchor().Position,
                         m_tWaypoints[pcKB].back()) > MIN_DISTANCE_SQUARED) {
          m_tWaypoints[pcKB].push_back(pcKB->GetEmbodiedEntity().GetOriginAnchor().Position);
@@ -80,5 +83,7 @@ void CTrajectoryLoopFunctions::PostStep() {
 
 /****************************************/
 /****************************************/
+
+
 
 REGISTER_LOOP_FUNCTIONS(CTrajectoryLoopFunctions, "trajectory_loop_functions")

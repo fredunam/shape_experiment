@@ -37,18 +37,18 @@
   <!-- *********************** -->
   <!-- * Arena configuration * -->
   <!-- *********************** -->
-  <arena size="5, 5, 1" center="0,0,0.5">
+  <arena size="5, 5, 0.3" center="0,0,0">
 
-    <box id="wall_north" size="4,0.1,0.5" movable="false">
+    <box id="wall_north" size="4.1,0.1,0.2" movable="false">
       <body position="0,2,0" orientation="0,0,0" />
     </box>
-    <box id="wall_south" size="4,0.1,0.5" movable="false">
+    <box id="wall_south" size="4.1,0.1,0.2" movable="false">
       <body position="0,-2,0" orientation="0,0,0" />
     </box>
-    <box id="wall_east" size="0.1,4,0.5" movable="false">
+    <box id="wall_east" size="0.1,4,0.2" movable="false">
       <body position="2,0,0" orientation="0,0,0" />
     </box>
-    <box id="wall_west" size="0.1,4,0.5" movable="false">
+    <box id="wall_west" size="0.1,4,0.2" movable="false">
       <body position="-2,0,0" orientation="0,0,0" />
     </box>
 
@@ -88,6 +88,14 @@
     <qt-opengl>
       <user_functions library="build/examples/loop_functions/trajectory_loop_functions/libtrajectory_loop_functions"
                       label="trajectory_qtuser_functions" />
+      <camera>
+          <placements>
+              <placement index="0" position="0,0.075,0.675" look_at="0,0.075,-0.325" up="1,0,0" lens_focal_length="5" />
+              <placement index="1" position="-4.5,0,2" look_at="0,0,0" up="1,0,0" lens_focal_length="30" />
+              <placement index="2" position="0.0991124,-0.22085,0.257469" look_at="0.0991124,-0.22085,-0.742531" up="0.994856,-0.101302,0" lens_focal_length="20" />
+              <placement index="3" position="0.0557748,0.611663,0.194361" look_at="0.095209,0.605023,-0.80484" up="0.985329,-0.165914,0.0399893" lens_focal_length="20" />
+          </placements>
+      </camera>
     </qt-opengl>
   </visualization>
 

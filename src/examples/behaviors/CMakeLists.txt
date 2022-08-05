@@ -72,4 +72,74 @@ if(ARGOS_BUILD_FOR_SIMULATOR)
   #
   add_executable(test_debug test_debug.h test_debug.c)
   target_link_libraries(test_debug argos3plugin_simulator_kilolib)
+  
+  
+  
+  
+  # ******************************************************************* #
+  #                       personal experience lab                       #
+  # ******************************************************************* #
+  
+  
+  #
+  # Lab_F1: Orbit_message
+  #
+  add_executable(orbit_star_message orbit_star_message.c)
+  target_link_libraries(orbit_star_message argos3plugin_simulator_kilolib)
+  add_executable(orbit_planet_message orbit_planet_message.c)
+  target_link_libraries(orbit_planet_message argos3plugin_simulator_kilolib)
+  
+  #
+  # Lab_communication
+  #
+  add_executable(lab_speaker lab_speaker.c)
+  target_link_libraries(lab_speaker argos3plugin_simulator_kilolib)
+  add_executable(lab_listener lab_listener.c)
+  target_link_libraries(lab_listener argos3plugin_simulator_kilolib)
+  
+   #
+  # Lab_communication_mod
+  #
+  add_executable(lab_speaker_mod lab_speaker_mod.c)
+  target_link_libraries(lab_speaker_mod argos3plugin_simulator_kilolib)
+  add_executable(lab_listener_mod lab_listener_mod.c)
+  target_link_libraries(lab_listener_mod argos3plugin_simulator_kilolib)
+  
+  #
+  # Lab Disperse
+  #
+  add_executable(lab_disperse lab_disperse.c)
+  target_link_libraries(lab_disperse argos3plugin_simulator_kilolib)
+  
+  
+ #
+  # Lab Gradient
+  #
+  add_executable(lab_gradient lab_gradient.c)
+  target_link_libraries(lab_gradient argos3plugin_simulator_kilolib)
+  
+  #
+  # Lab lampe hypo
+  #
+  add_executable(lab_lampe_hypo lab_lampe_hypo.c)
+  target_link_libraries(lab_lampe_hypo argos3plugin_simulator_kilolib)
+  
+    #
+  # Lab u
+  #
+  add_executable(lab_u lab_u.c)
+  target_link_libraries(lab_u argos3plugin_simulator_kilolib)
+  
+  #
+  # Lab ark
+  #
+  add_executable(lab_foraging lab_foraging.c)
+  target_link_libraries(lab_foraging argos3plugin_simulator_kilolib)
+
+  #
+  # Lab shape
+  #
+  add_executable(shape_experiment shape_experiment.c)
+  target_link_libraries(shape_experiment argos3plugin_simulator_kilolib)
+  
 endif(ARGOS_BUILD_FOR_SIMULATOR)

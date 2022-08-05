@@ -81,10 +81,12 @@ void loop()
    if (current_light < THRESH_LO)
    {
       set_motion(RIGHT);
+      printf("(RIGHT) current_light : %d\n", current_light);
    }
    else if (current_light > THRESH_HI)
    {
       set_motion(LEFT);
+      printf("(LEFT) current_light : %d\n", current_light);
    }
 }
 

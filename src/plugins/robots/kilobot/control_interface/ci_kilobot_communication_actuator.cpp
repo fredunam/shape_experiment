@@ -24,7 +24,7 @@ namespace argos {
    void CCI_KilobotCommunicationActuator::SetMessage(message_t* pt_msg) {
       m_ptMessage = pt_msg;
    }
-
+   
    /****************************************/
    /****************************************/
 

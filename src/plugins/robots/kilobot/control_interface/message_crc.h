@@ -31,4 +31,6 @@
 
 uint16_t message_crc(const message_t *msg);
 
+uint16_t message_crc_perso(const message_t_perso *msg);
+
 #endif//__MESSAGES_CRC_H__

@@ -49,7 +49,7 @@
       <controller config="speaker" />>
     </kilobot>
 
-    <kilobot id="kb2">
+		 <kilobot id="kb2">
       <body position="0.025,0,0" orientation="0,0,0" />
       <controller config="listener" />>
     </kilobot>
