@@ -1,0 +1,44 @@
+/home/fred/Applications/clion-2022.1.3/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/home/fred/Applications/clion-2022.1.3/bin/ninja/linux/ninja -G Ninja -S /home/fred/argos3-kilobot/src -B /home/fred/argos3-kilobot/src/cmake-build-debug
+-- Found ARGoS: /usr/lib/argos3/libargos3core_simulator.so
+CMake Warning (dev) at /home/fred/Applications/clion-2022.1.3/bin/cmake/linux/share/cmake-3.22/Modules/FindOpenGL.cmake:315 (message):
+  Policy CMP0072 is not set: FindOpenGL prefers GLVND by default when
+  available.  Run "cmake --help-policy CMP0072" for policy details.  Use the
+  cmake_policy command to set the policy and suppress this warning.
+
+  FindOpenGL found both a legacy GL library:
+
+    OPENGL_gl_LIBRARY: /usr/lib/x86_64-linux-gnu/libGL.so
+
+  and GLVND libraries for OpenGL and GLX:
+
+    OPENGL_opengl_LIBRARY: /usr/lib/x86_64-linux-gnu/libOpenGL.so
+    OPENGL_glx_LIBRARY: /usr/lib/x86_64-linux-gnu/libGLX.so
+
+  OpenGL_GL_PREFERENCE has not been set to "GLVND" or "LEGACY", so for
+  compatibility with CMake 3.10 and below the legacy GL library will be used.
+Call Stack (most recent call first):
+  /usr/share/argos3/cmake/FindARGoSQTOpenGL.cmake:21 (find_package)
+  /usr/share/argos3/cmake/ARGoSConfig.cmake:131 (find_package)
+  cmake/ARGoSBuildChecks.cmake:4 (find_package)
+  CMakeLists.txt:55 (include)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Checking for module 'glut'
+--   No package 'glut' found
+-- Found Qt5: version 
+-- Found Qt5Widgets: version 5.12.8
+-- Found Qt5Gui: version 5.12.8
+CMake Warning (dev) at /home/fred/Applications/clion-2022.1.3/bin/cmake/linux/share/cmake-3.22/Modules/FindPackageHandleStandardArgs.cmake:438 (message):
+  The package name passed to `find_package_handle_standard_args` (rt) does
+  not match the name of the calling package (RT).  This can lead to problems
+  in calling code that expects `find_package` result variables (e.g.,
+  `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  cmake/FindRT.cmake:28 (find_package_handle_standard_args)
+  cmake/ARGoSBuildChecks.cmake:13 (find_package)
+  CMakeLists.txt:55 (include)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/fred/argos3-kilobot/src/cmake-build-debug

@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "examples/controllers/kilobot_diffusion",
+		"source" : "examples/controllers/kilobot_diffusion"
+	}
+}

@@ -1,0 +1,1 @@
+CMakeLists.txt not found in /home/fred/argos3-kilobot/src/examples/loop_functions/shape_loop_functions Select CMakeLists.txt
