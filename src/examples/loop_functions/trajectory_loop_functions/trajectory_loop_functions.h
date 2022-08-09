@@ -12,7 +12,10 @@ public:
 
    typedef std::map<CKilobotEntity*, std::vector<CVector3> > TWaypointMap;
    TWaypointMap m_tWaypoints;
-   
+
+    typedef std::map<CKilobotEntity*, std::vector<CVector3> > TTargetMap;
+    TTargetMap m_tTargets;
+
 public:
 
    virtual ~CTrajectoryLoopFunctions() {}

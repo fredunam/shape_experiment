@@ -1,9 +1,12 @@
-//
-// Created by fred on 28/07/22.
-//
+/*  Authors: Mohamed S. Talamali (mstalamali1@sheffield.ac.uk) and Andreagiovanni Reina (a.reina@sheffield.ac.uk)
+ *
+ *  If you use this code for scientific experiment, please cite: M.S. Talamali et al. Swarm Intelligence (2019)
+ *
+ *  Copyright University of Sheffield, 2019
+ */
 
-#ifndef ARGOS3_SIMULATOR_SHAPE_FORMATION_H
-#define ARGOS3_SIMULATOR_SHAPE_FORMATION_H
+#ifndef OBS_LOOP_H // changed from ARK_TEST_H
+#define OBS_LOOP_H // changed from ARK_TEST_H
 
 namespace argos {
     class CSpace;
@@ -11,6 +14,7 @@ namespace argos {
     class CFloorEntity;
     class CSimulator;
 }
+
 
 #include <math.h>
 // basic file operations
@@ -48,133 +52,83 @@ namespace argos {
 using namespace std;
 using namespace argos;
 
-class CShapeLoopFunctions : CLoopFunctions{
-
-    typedef std::map<CKilobotEntity*, std::vector<CVector3> > TWaypointMap;
-    TWaypointMap m_tWaypoints;
+class CShapeFormation : public CLoopFunctions {
 
 public:
 
-    CShapeLoopFunctions();
-    virtual ~CShapeLoopFunctions(){}
-    virtual void Init(TConfigurationNode& t_tree);
+    typedef std::map<CKilobotEntity*, std::vector<CVector3> > TWaypointMap;
+
+public:
+
+    CShapeFormation();
+    virtual ~CShapeFormation();
+    virtual void Init(TConfigurationNode& t_tree);// Peut être utilisé pour ajouter des éléments du fichier .argos.
     virtual void Reset();
     virtual void Destroy();
-    virtual void Prestep();
+    virtual void PreStep();
     virtual void PostStep();
 
-    // Get a Vector of all the Kilobots in the space
-    void GetKilobotsEntities();
+    /**
+     * reads a file and calculates the number of lines
+     * @return the number of lines
+     */
+    int nbLineFile();
 
-    // Get the message to send to a Kilobot according to its position
-    void Get_message_receive(CKilobotEntity *kilobot_entity, message_t &message);
+    /**
+     * reads a file and calculates the number of characters
+     * @return
+     */
+    int nbCharFile();
 
-    // Get the message to send to a Kilobot according to its position
-    void Get_message_to_send(CKilobotEntity *kilobot_entity, message_t &message);
+    /**
+     *
+     */
+    void readFile();
 
-    // Get the position of one Kilobot
-    CVector2 GetKilobotPosition(CKilobotEntity *kilobot_entity);
-
-    // Get the kilobot ID
-    UInt16 GetKilobotId(CKilobotEntity *kilobot_entity);
 
 
 private:
 
-    void write_file();
-
-    void read_file();
-
-    // A reference to the simulator
-    CSimulator& m_cSimulator;
-
-    // A reference to the space
-    //CSpace& m_cSpace;
-
     // Space size
     CVector3 m_vSpaceSize;
 
-    // Padding of the space to shift the index and access the floorMatrix
-    CVector3 m_vSpaceLimits;
-
-    // Cells per metre
     int m_iCellsPerMetre;
 
-    // Cells per metre
     int m_iCellsPerMetreOBS;
 
-    //The OHC embodied entity
-    CEmbodiedEntity m_ohcEmbodiedEntity;
+    //List of kilobots
+    typedef  std::vector<CKilobotEntity*> KVector;
+    KVector m_kilobotsEntities;
 
-    //The OHC communication Anchor
-    SAnchor& m_cCommAnchor;
-
-    //List of the OHC communication entities
-    typedef std::vector<CKilobotCommunicationEntity> KCVector;
-    KCVector m_ohcCommunicationEntities;
-
-    //List of the Kilobots in the space
-    typedef std::vector<CKilobotEntity*> KVector;
-    KVector m_KilobotsEntities;
-
-    // List of the messages sent by communication entities
     typedef std::vector<message_t> KMVector;
     KMVector m_messages;
 
+    //Counter for messages
+    unsigned int m_messaging_counter;
 
-    std::vector<int> m_BringingFoodFrom;
+    //Target vector
+    typedef struct{
+        float xTarget;
+        float yTarget;
+    }STarget;
 
-
-    //A flag for a kilbot needs a message to be sent or not
-    bool m_tx_flag;
-
-    //Counters for messages and data acquizition
-    unsigned int m_messaging_counter, m_floor_counter;
-    unsigned int m_update_matrix_timesteps;
-
-    //output file name
-    std::string m_strOutput;
-
-    //Radius of the circles
-    std::vector<int> hasFood;
-    std::map<UInt16, int> collected;
-    std::vector<int> onPath;
-    float phToSend[210][4];
-
-    //options vector
-    struct FoodClass{
-        int id;
-        int quality;
-        CVector2 position;
-        Real radius;
-        UInt8 colour;
-    };
-
-    std::vector<FoodClass> foodVector;
+    std::vector<STarget> targetVector;
 
     int MatrixSize_x;
     int MatrixSize_y;
     float *floorMatrix;
 
+    float m_hop;
+    float m_xExtremFile, m_yExtremFile;
 
-    int OBSMatrixSize_x;
-    int OBSMatrixSize_y;
-    float *obstacle_Matrix;
-    bool m_showObstacleAvoidanceArea;
-    float maxPheroLimit;
+    int m_nbLines, m_nbChar, m_nbColumn;
 
-    std::string m_strOutputFilename;
-
-    float evaporation_rate, diffusion_rate, pheromone_amount;
-
-    Real m_obstacle_avoidance_range;
-
-    int m_Vmax;
-
-    Real m_fTimeInMinutes;
-
-    Real m_fDataRecordingStartTimeInMinutes;
+    char m_charact;
+    string m_line;
 
 };
 
-#endif //ARGOS3_SIMULATOR_SHAPE_FORMATION_H
+
+
+
+#endif

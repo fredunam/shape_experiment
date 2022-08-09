@@ -4,7 +4,6 @@
 #include <kilolib.h>
 #include <stdio.h>
 
-
 // Constants for motion handling function.
 #define STOP 0
 #define FORWARD 1
@@ -16,8 +15,9 @@ int current_motion = STOP;
 int new_message = 0;
 message_t message;
 uint32_t last_state_update = 0;
-int column=0, line=0, nbRobots=0;
-int flag = 1;
+int column=0, line=0, nbRobots=0, charFile=0, flag=0;
+FILE *ptrFile = NULL;
+FILE *ptr_w_file = NULL;
 
 
 typedef struct Coordonnees Coordonnees;
@@ -32,15 +32,25 @@ typedef struct {
     float target_y;
     int kilo_id;
 }ST_Target;
+ST_Target liste_target[113];
+
 
 char charAct;
 
+
+
+/**
+ *
+ * @param file
+ * @param ptrColumn
+ * @param ptrLine
+ */
 void sizeFile(FILE *file, int *ptrColumn, int *ptrLine){
 
-    int charFile=0;
-    int column=0, line=0, nbRobots=0;
+//    int charFile=0;
+    int column=0, line=0;
 
-    file = fopen("/home/fred/argos3-kilobot/src/examples/shape_files/u_letter.txt", "r+");
+    file = fopen("/home/fred/argos3-kilobot/src/examples/shape_files/Shape_U.txt", "r+");
 
     if (file != NULL){
         //iterates through the file and counts the number of characters and lines
@@ -56,67 +66,89 @@ void sizeFile(FILE *file, int *ptrColumn, int *ptrLine){
         }while (charAct != EOF);
 
         //column <- number of characters divided by the number of lines plus one ending with EOF
-        column = charFile / (line + 1);
+        column = (charFile / line ) + 1;
 
         *ptrColumn = column;
-        *ptrLine = line + 1;
+        *ptrLine = line;
 
-        printf("nb lines: %d - nb columns: %d - nb characters: %d \n\n", line + 1, column, charFile);
+//        printf("nb lines: %d - nb columns: %d - nb characters: %d \n\n", line + 1, column, charFile);
 
         fclose(file);
 
     } else {
-        printf("sizeFile : unable to open the file");
+        printf("sizeFile : unable to open the file\n");
     }
 }
 
-
-void coordAll_wp(FILE *file, int *ptrColumn, int *ptrLine, int *ptrNbRobots){
+/**
+ * print toutes les targets dans un fichier "console.txt" et en console
+ * @param file un fihier source binaire représentant la forme. Les '0' seront les targets
+ * @param w_file un fichier affichant les targets et leurs coordonnées
+ * @param ptrColumn le nbre de colonne du fichier source
+ * @param ptrLine le nbre de ligne du fichier source
+ * @param ptrNbRobots le nbre de robot nécessaire pour réaliser la forme
+ */
+void coordAll_wp(FILE *file, FILE *w_file, int *ptrColumn, int *ptrLine, int *ptrNbRobots){
 
     Coordonnees fCoordonnees[*ptrColumn+1][*ptrLine+1];
     float hop = 0.10;
-    float x = -1.5;
+    float x = -1.4;
     float y = -1.5;
+    int nbChar = 0;
 
-    file = fopen("/home/fred/argos3-kilobot/src/examples/shape_files/u_letter.txt", "r+");
+    file = fopen("/home/fred/argos3-kilobot/src/examples/shape_files/Shape_U.txt", "r+");
+    w_file = fopen("/home/fred/argos3-kilobot/src/examples/shape_files/console.txt", "r+");
 
-    if(file != NULL){
+    if(file != NULL && w_file != NULL){
 
         do{
-            for ( int i=0; i< *ptrLine; i++){
-                for( int j=0; j <= *ptrColumn; j++){
+            printf("ptrColumn : %d - ptrLine : %d \n",*ptrColumn, *ptrLine);
+            printf("-------------------------------------------------------------------\n");
+            for ( int i=1; i<= *ptrLine; i++){
+                for( int j=1; j <= *ptrColumn; j++){
                     charAct = fgetc(file);
-                    printf("%c ", charAct);
+                    //printf("%c ", charAct);
                     if(charAct != '\n'){
                         if (charAct == '0'){
                             fCoordonnees[i][j].x = x;
                             fCoordonnees[i][j].y = y;
                             *ptrNbRobots = *ptrNbRobots + 1;
+                            printf("i = %d   j = %d : [%.2f, %.2f] \n ", i, j, fCoordonnees[i][j].x, fCoordonnees[i][j].y);
+                            //fprintf(w_file,"i = %d   j = %d : [%.2f, %.2f] \n", i, j, fCoordonnees[i][j].x, fCoordonnees[i][j].y);
+//                            fprintf(w_file,"<target id=\"%d\" position=\"%.5f, %.5f\" />\n",nbChar, fCoordonnees[i][j].x, fCoordonnees[i][j].y);
+                            liste_target[nbChar].target_x = fCoordonnees[i][j].x;
+                            liste_target[nbChar].target_y = fCoordonnees[i][j].y;
+                            nbChar ++;
                         }
-//                        else {
-//                            fCoordonnees[i][j].x = 10.0;
-//                            fCoordonnees[i][j].y = 10.0;
-//                        }
-//                    } else {
-//                        fCoordonnees[i][j].x = 50.0;
-//                        fCoordonnees[i][j].y = 50.0;
+                        else {
+                            fCoordonnees[i][j].x = 10.00;
+                            fCoordonnees[i][j].y = 10.00;
+                        }
+                    } else {
+                        fCoordonnees[i][j].x = 50.00;
+                        fCoordonnees[i][j].y = 50.00;
                     }
-                    if((fCoordonnees[i][j].x != 50.0 && fCoordonnees[i][j].y != 50.0) || (fCoordonnees[i][j].x != 10.0 && fCoordonnees[i][j].y != 10.0)){
-                        printf("[%.2f, %.2f] | ", fCoordonnees[i][j].x, fCoordonnees[i][j].y);
-                    }
-                    x = x + hop;
+//                    if((fCoordonnees[i][j].x != 50.00 && fCoordonnees[i][j].y != 50.00) || (fCoordonnees[i][j].x != 10.00 && fCoordonnees[i][j].y != 10.00)){
+//                        printf("[%.2f, %.2f] | ", fCoordonnees[i][j].x, fCoordonnees[i][j].y);
+//                    }
+                    y = y + hop;
                 }
-                x = -1.5;
-                y = y + hop;
+                y = -1.5;
+                x = x + hop;
             }
         }while (charAct != EOF);
-
+        //fprintf(w_file,"nbChar : %d ", nbChar);
         fclose(file);
+        fclose(w_file);
     } else {
         printf(" coordAll_wp : unable to open the file");
+
     }
     printf("\n");
 }
+
+
+
 
 // Function to handle motion.
 void set_motion(int new_motion)
@@ -155,23 +187,29 @@ void setup(){
     // Initialize an empty message.
     message.type = NORMAL;
     message.crc = message_crc(&message);
+    if (flag == 0) {
+        sizeFile(ptrFile, &column, &line);
+        printf("In setup: nb lines: %d - nb columns: %d - nb characters: %d \n\n", line, column, charFile);
+        coordAll_wp(ptrFile, ptr_w_file, &column, &line, &nbRobots);
+        flag = 1;
+        printf("flag = %d \n", flag);
+    }
 }
 
 
 void loop(){
 
 
-    if (kilo_ticks == 1){
-        FILE *ptrFile = NULL;
-        // Calls a function that defines the number of rows and columns in the input file
-        sizeFile(ptrFile, &column, &line);
-        printf("****************************************************************************************\n\n");
-
-        // Calls a function that determines the orthogonal coordinates of the characters in the parameter file
-        coordAll_wp(ptrFile, &column, &line, &nbRobots);
-        printf("\n\nNous auront besoin de %d robots pour faire cette belle forme\n", nbRobots);
-        flag = 0;
-    }
+//    if (kilo_ticks >= 1 && kilo_ticks < 2){
+//        FILE *ptrFile = NULL;
+//        // Calls a function that defines the number of rows and columns in the input file
+//        sizeFile(ptrFile, &column, &line);
+//        printf("****************************************************************************************\n\n");
+//
+//        // Calls a function that determines the orthogonal coordinates of the characters in the parameter file
+//        coordAll_wp(ptrFile, &column, &line, &nbRobots);
+//        printf("\n\nNous auront besoin de %d robots pour faire cette belle forme\n", nbRobots);
+//    }
 
       if( kilo_ticks > (last_state_update + 32)){
         last_state_update = kilo_ticks;
@@ -212,6 +250,7 @@ message_t *message_tx()
 }
 
 int main(){
+
     kilo_message_rx = message_rx;
     kilo_message_tx = message_tx;
     kilo_start(setup, loop);

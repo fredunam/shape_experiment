@@ -4,8 +4,8 @@ if(ARGOS_BUILD_FOR_SIMULATOR)
   #
   # Lab0: Blinky
   #
-  add_executable(blinky blinky.c)
-  target_link_libraries(blinky argos3plugin_simulator_kilolib)
+#  add_executable(blinky blinky.c)
+#  target_link_libraries(blinky argos3plugin_simulator_kilolib)
 
   #
   # Lab1.2: Simple Movement

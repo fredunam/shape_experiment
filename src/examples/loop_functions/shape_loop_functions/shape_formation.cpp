@@ -1,86 +1,119 @@
-//
-// Created by fred on 28/07/22.
-//
+/*  Authors: Mohamed S. Talamali (mstalamali1@sheffield.ac.uk) and Andreagiovanni Reina (a.reina@sheffield.ac.uk)
+ *
+ *  If you use this code for scientific experiment, please cite: M.S. Talamali et al. Swarm Intelligence (2019)
+ *
+ *  Copyright University of Sheffield, 2019
+ */
 
 #include "shape_formation.h"
+#include <limits>
+#define I2I(x,y) int(x)*MatrixSize_x+int(y)
+#define I2I_OBS(x,y) int(x)*OBSMatrixSize_x+int(y)
 
-CShapeLoopFunctions::CShapeLoopFunctions() : CLoopFunctions(), m_cSimulator(GetSimulator()), m_iCellsPerMetre(100),
-         m_iCellsPerMetreOBS(100),
-         m_ohcEmbodiedEntity(CEmbodiedEntity(NULL, "ohc_body", CVector3(0, 0, 1),
-                                             CQuaternion())),
-         m_cCommAnchor(m_ohcEmbodiedEntity.AddAnchor("comm", CVector3(0, 0, 0))),
-         m_tx_flag(false), m_messaging_counter(0), m_floor_counter(0),
-         m_update_matrix_timesteps(0), MatrixSize_x(0), MatrixSize_y(0),
-         floorMatrix(0), OBSMatrixSize_x(0), OBSMatrixSize_y(0), obstacle_Matrix(0),
-         m_showObstacleAvoidanceArea(false),
-         maxPheroLimit(std::numeric_limits<float>::max()), evaporation_rate(0.05),
-         diffusion_rate(0.02), pheromone_amount(250),
-         m_obstacle_avoidance_range(0.05), m_Vmax(0) {
+
+/****************************************/
+/****************************************/
+
+CShapeFormation::CShapeFormation() {
+
+}
+
+CShapeFormation::~CShapeFormation() {
+
+}
+
+void CShapeFormation::Reset() {
+    CLoopFunctions::Reset();
+}
+
+void CShapeFormation::Destroy() {
+    CLoopFunctions::Destroy();
+}
+
+void CShapeFormation::PreStep() {
+    CLoopFunctions::PreStep();
+}
+
+void CShapeFormation::PostStep() {
+    CLoopFunctions::PostStep();
+}
+
+
+int CShapeFormation::nbLineFile(){
+
+    int nbLines = 0;
+    std::ifstream file("/home/fred/argos3-kilobot/src/examples/shape_files/Shape_U.txt", ios::in);
+    string lines;
+
+    if (file) {
+        while (getline(file, lines)) {
+            nbLines++;
+        }
+        file.close();
+    } else {
+        cerr << "ERROR: Impossible to open the file" << endl;
     }
 
-CShapeLoopFunctions::~CShapeLoopFunctions(){}
-
-void CShapeLoopFunctions::Init(TConfigurationNode &t_tree) {
-
+    return nbLines;
 }
 
-void CShapeLoopFunctions::Reset() {
 
-}
+int CShapeFormation::nbCharFile(){
 
-void CShapeLoopFunctions::write_file() {
-
-}
-
-void CShapeLoopFunctions::read_file() {
-    ifstream file("src/examples/shape_files/u_letter.txt");
-    char END_OF_FILE = '#';
-    char singleChar;
+    int nbChar = 0;
+    ifstream file("/home/fred/argos3-kilobot/src/examples/shape_files/Shape_U.txt", ios::in);
 
     if(file){
-
+        char characters;
+        string lines;
+        while(file.get(characters)){
+            if(characters == '0' || characters == '1'){
+                nbChar++;
+            }
+        }
+        file.close();
+    } else {
+        cerr << "ERROR: Impossible to open the file" << endl;
     }
-}
 
-void CShapeLoopFunctions::Destroy() {
-
-}
-
-void CShapeLoopFunctions::Prestep() {
-
-}
-
-void CShapeLoopFunctions::PostStep() {
-
-}
-
-void CShapeLoopFunctions::GetKilobotsEntities() {
-
-}
-
-CVector2 CShapeLoopFunctions::GetKilobotPosition(CKilobotEntity *kilobot_entity) {
-    CVector3 pos3D = kilobot_entity->GetEmbodiedEntity().GetOriginAnchor().Position;
-    std::cout << "uid: " << kilo_uid << " - pos_X: " << pos3D.GetX() << " - pos_Y: " << pos3D.GetY() << std::endl;
-    return CVector2(pos3D.GetX(), pos3D.GetY());
+    return nbChar;
 }
 
 
-void CShapeLoopFunctions::Get_message_receive(CKilobotEntity *kilobot_entity, message_t &message) {
+void CShapeFormation::readFile(){
 
-}
+    m_hop = 0.10;
+    m_xExtremFile = -1.40;
+    m_yExtremFile = -1.50;
+    m_nbLines = nbLineFile();
+    m_nbChar = nbCharFile();
+    m_nbColumn = m_nbChar / m_nbLines;
 
-void CShapeLoopFunctions::Get_message_to_send(CKilobotEntity *kilobot_entity, message_t &message) {
+    STarget setTargets;
 
-    CVector2 kb_pos= GetKilobotPosition(kilobot_entity);
+    ifstream file ("/home/fred/argos3-kilobot/src/examples/shape_files/Shape_U.txt", ios::in);
+    if(file){
+        for (int i = 0; i < m_nbLines; ++i) {
+            for (int j = 0; j < m_nbColumn+1; ++j) {
+                file.get(m_charact);
+                if(m_charact == '0'){
+                    setTargets.xTarget = m_xExtremFile;
+                    setTargets.yTarget = m_yExtremFile;
+                    targetVector.push_back(setTargets);
+                }
+                m_yExtremFile = m_yExtremFile + m_hop;
+            }
+            m_yExtremFile = -1.50;
+            m_xExtremFile = m_xExtremFile + m_hop;
+        }
+        file.close();
+    } else {
+        cerr << "ERROR: Impossible to open the file" << endl;
+    }
 
-}
-
-
-UInt16 CShapeLoopFunctions::GetKilobotId(CKilobotEntity *kilobot_entity){
-    std::string entity_id((kilobot_entity)->GetControllableEntity().GetController().GetId());
-    return std::stoul(entity_id.substr(2));
 }
 
 
 
 
+REGISTER_LOOP_FUNCTIONS(CShapeFormation, "ARKloopfunction")

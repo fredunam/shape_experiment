@@ -1,4 +1,7 @@
 #include "trajectory_loop_functions.h"
+#include <iostream>
+
+using namespace std;
 
 /****************************************/
 /****************************************/
@@ -23,15 +26,16 @@ void CTrajectoryLoopFunctions::Init(TConfigurationNode& t_tree) {
    /* Obtenez la carte de tous les kilobots de l'espace */
    CSpace::TMapPerType& tKBMap = GetSpace().GetEntitiesByType("kilobot");
    /* Go through them */
-   for(CSpace::TMapPerType::iterator it = tKBMap.begin();
-       it != tKBMap.end();
-       ++it) {
+   for(CSpace::TMapPerType::iterator it = tKBMap.begin(); it != tKBMap.end(); ++it)
+   {
       /* Create a pointer to the current kilobot */
       CKilobotEntity* pcKB = any_cast<CKilobotEntity*>(it->second);
       /* Create a waypoint vector */
       m_tWaypoints[pcKB] = std::vector<CVector3>();
       /* Add the initial position of the kilobot */
       m_tWaypoints[pcKB].push_back(pcKB->GetEmbodiedEntity().GetOriginAnchor().Position);
+
+      //cout << pcKB->GetEmbodiedEntity().GetOriginAnchor().Position << endl;
    }
 }
 
@@ -77,8 +81,10 @@ void CTrajectoryLoopFunctions::PostStep() {
       if(SquareDistance(pcKB->GetEmbodiedEntity().GetOriginAnchor().Position,
                         m_tWaypoints[pcKB].back()) > MIN_DISTANCE_SQUARED) {
          m_tWaypoints[pcKB].push_back(pcKB->GetEmbodiedEntity().GetOriginAnchor().Position);
+          cout << pcKB->GetEmbodiedEntity().GetOriginAnchor().Position << endl;
       }
    }
+
 }
 
 /****************************************/

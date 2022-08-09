@@ -209,7 +209,7 @@ void CArk::PreStep(){
 
     read_file();
 
-    /* Update the time variable required for the experiment (in sec)*/
+    /* Mettre à jour la variable de temps requise pour l'expérience (in sec)*/
     m_fTimeInMinutes=GetSpace().GetSimulationClock()/( 60.0 * CPhysicsEngine::GetInverseSimulationClockTick() );
 
     //Actualize the floor every 10 steps
