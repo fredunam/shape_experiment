@@ -127,7 +127,7 @@ int CShapeFormation::nbLineFile() {
 
 int CShapeFormation::nbCharFile() {
 
-    nbChar = 0;
+    int nbChar = 0;
     ifstream file("/home/fred/argos3-kilobot/src/examples/shape_files/Shape_U.txt", ios::in);
 
     if (file) {
@@ -178,7 +178,6 @@ void CShapeFormation::readFile() {
     } else {
         cerr << "ERROR: Impossible to open the file" << endl;
     }
-
 }
 
 
