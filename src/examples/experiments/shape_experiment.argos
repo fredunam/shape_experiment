@@ -24,30 +24,13 @@
         <kilobot_communication implementation="default" />
       </actuators>
       <sensors>
-        <kilobot_communication implementation="default" medium="kilocomm" show_rays="false" />
+        <kilobot_communication implementation="default" medium="kilocomm" show_rays="true" />
       </sensors>
-      <params behavior="build/examples/behaviors/lab_foraging" />
+      <params behavior="build/examples/behaviors/shape_experiment" />
     </kilobot_controller>
   </controllers>
 
-  <!-- ****************** -->
-  <!-- * Loop functions * -->
-  <!-- ****************** -->
-  <loop_functions library="build/examples/loop_functions/shape_loop_functions/libshape_loop_functions"
-      label="shape_loop_functions"
-      datafilename="tmp_shape.txt"
-      frequency="3000"
-      data_recording_start_time="1"
-      cells_per_metre="150"
-      cells_per_metre_obs="900"
-      obstacle_avoidance_range="0.01" >
 
-    <target id="0" position="-0.90000, -0.80000" />
-    <target id="1" position="-0.90000, -0.70000" />
-    <target id="2" position="-0.90000, -0.60000" />
-
-
-</loop_functions>
 
   <!-- *********************** -->
   <!-- * Arena configuration * -->
@@ -69,17 +52,15 @@
       </box>
 
         <distribute>
-          <position method="grid"
-                    center="0,0,0"
-                    distances="0.05,0.05,0"
-                    layout="4,4,1" />
-          <orientation method="constant" values="0,0,0" />
-          <entity quantity="16" max_trials="1">
-            <kilobot id="kb">
-              <controller config="kbc" />>
-            </kilobot>
-          </entity>
-        </distribute>
+                <position method="uniform" min="-0.35,-0.35,0" max="0.35,0.35,0" />
+                <orientation method="uniform" min="0,0,0" max="360,0,0" />
+                <entity quantity="2" max_trials="500">
+                    <kilobot id="kb">
+                        <controller config="kbc" />
+        		            <dynamics2d friction="0.7" />
+                    </kilobot>
+                </entity>
+            </distribute>
 
   </arena>
 

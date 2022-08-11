@@ -69,19 +69,57 @@ public:
     virtual void PostStep();
 
     /**
-     * reads a file and calculates the number of lines
-     * @return the number of lines
+     * Créé un vecteur m_KilobotsEntities de pointeurs sur chaque entité 'kilobot'
      */
-    int nbLineFile();
+    void GetKilobotsEntities();
 
     /**
-     * reads a file and calculates the number of characters
-     * @return
+     * Donne la position d'un kilobot
+     * @param kilobot_entity ptr sur une entité 'kilobot'
+     * @return un vecteur 2d posX et posY
      */
-    int nbCharFile();
+    CVector2 GetKilobotPosition(CKilobotEntity *kilobot_entity);
+
+
+    /**
+     * Récupère l'orientation des robots
+     * @param kilobot_entity ptr sur une entité 'kilobot'
+     * @return l'angle du robot par rapport à l'axe des Y
+     */
+    CRadians GetKilobotOrientation(CKilobotEntity *kilobot_entity);
+
+
+    /**
+     * Converti et renvoie un entier représentant l'id du robot associé à ce contrôleur.
+     * @param kilobot_entity ptr sur une entité 'kilobot'
+     * @return l'id du 'kilobot'
+     */
+    UInt16 GetKilobotId(CKilobotEntity *kilobot_entity);
 
     /**
      *
+     * @param number_of_comm_entities
+     */
+    void CreateOhcCommunicationEntities(unsigned int number_of_comm_entities);
+
+    /**
+     * lit un fichier, parcourt toutes les lignes et incrémente une variable à retourner
+     * @return the number of lines
+     */
+    static int nbLineFile();
+
+
+    /**
+     * lit un fichier, parcourt toutes les caractères et incrémente une variable à retourner
+     * @return le nombre de carcatère correspondant à '1' ou à '0'
+     */
+    static int nbCharFile();
+
+
+    /**
+     * Lit un fichier et construit un vecteur de structures reprennant les coordonnées X et Y
+     *   des caractères '0' présents dans le fichier. LE contenu de ce vecteur sera les cibles que devront
+     *   atteindre les kilobots
      */
     void readFile();
 
@@ -89,34 +127,97 @@ public:
 
 private:
 
+    //Calculate the evaporation and diffusion for each cell
+    void updatePheromoneMatrix();
+
+    void write_file();
+
+    void read_file();
+
+    // A reference to the simulator
+    CSimulator& m_cSimulator;
+
+    // A reference to the space
+    //CSpace& m_cSpace;
+
     // Space size
     CVector3 m_vSpaceSize;
 
+    // Padding of the space to shift the index and access the floorMatrix
+    CVector3 m_vSpaceLimits;
+
+    // Cells per metre
     int m_iCellsPerMetre;
 
+    // Cells per metre
     int m_iCellsPerMetreOBS;
 
-    //List of kilobots
-    typedef  std::vector<CKilobotEntity*> KVector;
-    KVector m_kilobotsEntities;
+    //The OHC embodied entity
+    CEmbodiedEntity m_ohcEmbodiedEntity;
 
+    //The OHC communication Anchor
+    SAnchor& m_cCommAnchor;
+
+    //List of the OHC communication entities
+    typedef std::vector<CKilobotCommunicationEntity> KCVector;
+    KCVector m_ohcCommunicationEntities;
+
+    //List of the Kilobots in the space
+    typedef std::vector<CKilobotEntity*> KVector;
+    KVector m_KilobotsEntities;
+
+    // List of the messages sent by communication entities
     typedef std::vector<message_t> KMVector;
     KMVector m_messages;
 
-    //Counter for messages
-    unsigned int m_messaging_counter;
 
-    //Target vector
-    typedef struct{
-        float xTarget;
-        float yTarget;
-    }STarget;
+    std::vector<int> m_BringingFoodFrom;
 
-    std::vector<STarget> targetVector;
+
+    //A flag for a kilbot needs a message to be sent or not
+    bool m_tx_flag;
+
+    //Counters for messages and data acquizition
+    unsigned int m_messaging_counter, m_floor_counter;
+    unsigned int m_update_matrix_timesteps;
+
+    //output file name
+    std::string m_strOutput;
+
+    //Radius of the circles
+    std::vector<int> hasFood;
+    std::map<UInt16, int> collected;
+    std::vector<int> onPath;
+    float phToSend[210][4];
+
+    //options vector
+    struct FoodClass{
+        int id;
+        int quality;
+        CVector2 position;
+        Real radius;
+        UInt8 colour;
+    };
+
+    std::vector<FoodClass> foodVector;
 
     int MatrixSize_x;
     int MatrixSize_y;
     float *floorMatrix;
+
+
+    int OBSMatrixSize_x;
+    int OBSMatrixSize_y;
+
+    std::string m_strOutputFilename;
+
+    float  diffusion_rate;
+
+    int m_Vmax;
+
+    Real m_fTimeInMinutes;
+
+    Real m_fDataRecordingStartTimeInMinutes;
 
     float m_hop;
     float m_xExtremFile, m_yExtremFile;
@@ -125,6 +226,18 @@ private:
 
     char m_charact;
     string m_line;
+
+    /******************************************************************/
+    /******************************************************************/
+
+    static int nbChar;
+
+    //Target vector
+    typedef struct{
+        float xTarget;
+        float yTarget;
+    }STarget;
+    std::vector<STarget> targetVector;
 
 };
 

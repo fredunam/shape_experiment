@@ -340,7 +340,9 @@ void CArk::Get_message_to_send(CKilobotEntity* kilobot_entity,message_t& message
     int min_index=-1;
 
     for (UInt16 i = 0; i < foodVector.size(); ++i){
-        if (foodVector.at(i).id == 0){ continue; }
+        if (foodVector.at(i).id == 0){
+            continue;
+        }
 
         //Check if it is inside a food source
         Real distanceToFood = CVector2( foodVector.at(i).position - kb_pos ).Length();
